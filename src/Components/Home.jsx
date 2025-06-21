@@ -1,85 +1,59 @@
-import React, { useEffect, useCallback } from "react";
-import axios from "axios";
+import React from "react";
 import { Link } from "react-router-dom";
-import { useBlogs } from "./BlogContext";
 
 function Home() {
-  const { blogs, setBlogs, hasChanges } = useBlogs();
-
-  // Use `useCallback` to memoize setBlogs function
-  const memoizedSetBlogs = useCallback((newBlogs) => {
-    setBlogs(newBlogs);
-  }, [setBlogs]);
-
-  const api = async () => {
-    try {
-      const response = await axios.get("https://app.heyvisuals.com/api/blogs?limit=6");
-      memoizedSetBlogs(response.data.blogs.data);
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (blogs.length === 0 || hasChanges === true) {
-      api();
-    }
-  }, [blogs.length, hasChanges, memoizedSetBlogs]);
-
   return (
-    <>
-      <div className="flex items-center justify-between">
-
-        <Link to="/main" className="px-6">All Main</Link>
-        <h1 className="text-center text-3xl font-bold my-6">Welcome to Blogs</h1>
-
-
-        <Link to="/functions" className="px-6">Function List</Link>
-
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center px-6 py-12">
+      {/* Navigation Buttons */}
+      <div className="w-full flex justify-between items-center mb-10">
+        {/* <Link to="/main" className="text-blue-600 font-medium hover:underline">All Main</Link> */}
+        <Link to="/functions" className="text-blue-600 font-medium hover:underline">Function List</Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4 mb-10">
-        {blogs.length > 0 ? (
-          blogs.map((blog, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden">
-              <img
-                src={blog.image}
-                alt="Blog Thumbnail"
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h5 className="text-xl font-semibold mb-2">{blog.data.title}</h5>
-                <p className="text-gray-600 mb-4">{blog.data.description}</p>
-                <Link
-                  to={`/blog/${blog.id}`}
-                  state={{ blog }}
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-200"
-                >
-                  Go to Blog
-                </Link>
-              </div>
-            </div>
-          ))
-        ) : (
-          [...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse">
-              <div className="bg-gray-300 h-48 w-full" />
-              <div className="p-4 space-y-3">
-                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-300 rounded w-full"></div>
-                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-300 rounded w-full"></div>
-                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-300 rounded w-full"></div>
-                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                <div className="h-4 bg-gray-300 rounded w-full"></div>
-                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                <div className="h-8 bg-blue-300 rounded w-1/3 mt-4"></div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </>
+
+      {/* Hero Section */}
+      <section className="text-center max-w-4xl">
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to Our Platform</h1>
+        <p className="text-gray-600 text-lg mb-6">
+          Explore modern solutions, powerful tools, and intuitive features built to help you grow faster and smarter.
+        </p>
+        <Link
+          to="/main"
+          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition"
+        >
+          Explore Now
+        </Link>
+      </section>
+
+      {/* Feature Grid */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-16 w-full max-w-6xl">
+        {[
+          {
+            title: "Seamless Integration",
+            desc: "Easily connect with your tools and streamline your workflows without hassle.",
+            icon: "🔗"
+          },
+          {
+            title: "Responsive Design",
+            desc: "Access your content anywhere, anytime on any device with pixel-perfect responsiveness.",
+            icon: "📱"
+          },
+          {
+            title: "User-Friendly Interface",
+            desc: "Navigate, interact, and perform tasks effortlessly.",
+            icon: "👌"
+          }
+        ].map((feature, index) => (
+          <div
+            key={index}
+            className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition text-center"
+          >
+            <div className="text-4xl mb-4">{feature.icon}</div>
+            <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+            <p className="text-gray-600">{feature.desc}</p>
+          </div>
+        ))}
+      </section>
+    </div>
   );
 }
 
